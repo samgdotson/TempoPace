@@ -1,4 +1,6 @@
-#Michael Lam 1/10/2012
+# Michael Lam 1/10/2012
+
+# Sam Dotson 6/29/2021
 
 class Time:
     def __init__(self,string):
@@ -26,8 +28,19 @@ class Time:
         return Time(self.getseconds() * other.getseconds())
     def __div__(self,other):
         return Time(self.getseconds() / other.getseconds())
-    def __cmp__(self,other):
-        return self.getseconds() - other.getseconds()
+    def __lt__(self,other):
+        return self.getseconds() < other.getseconds()
+    def __gt__(self,other):
+        return self.getseconds() > other.getseconds()
+    def __le__(self,other):
+        return self.getseconds() <= other.getseconds()
+    def __ge__(self,other):
+        return self.getseconds() >= other.getseconds()
+    def __eq__(self,other):
+        return self.getseconds() == other.getseconds()
+    def __ne__(self,other):
+        return self.getseconds() != other.getseconds()
+
     def __repr__(self):
         if self.second < 10:
             second = "0" + str(self.second)
@@ -46,8 +59,8 @@ class Time:
         return self.hour*60*60 + self.minute*60 + self.second
     def addSeconds(self,other):
         return Time(self.getseconds() + other)
-   
-       
+
+
 
 #Instead of solving for f(x,y), solve for y
 def bilinearinterpolation(x,y):
@@ -64,10 +77,10 @@ def bilinearinterpolation(x,y):
     if x>=totaltimes[-1] or x<=totaltimes[0] or x2==x1: #End of the chart!
         if x>=totaltimes[-1]:
             index=-1
-            print "Warning: End of chart. Using maximum values given."
+            print("Warning: End of chart. Using maximum values given.")
         elif x<=totaltimes[0]:
             index=0
-            print "Warning: End of chart. Using minimum values given."
+            print("Warning: End of chart. Using minimum values given.")
         else:
             index=totaltimes.index(x1)
         for i in range(len(twentymark)-1):
@@ -98,14 +111,14 @@ def bilinearinterpolation(x,y):
     ypercent=(y.getseconds()-y2.getseconds())/(y1.getseconds()-y2.getseconds())
     vdot = (vdots[yi1]-vdots[yi2])*ypercent + vdots[yi2]
     return vdot
-     
-       
+
+
 
 
 def fixchart():
     newchart = []
     for i in range(len(chart)):
-        newchart.append(map(lambda x: twentymark[i].addSeconds(x),chart[i]))
+        newchart.append(list(map(lambda x: twentymark[i].addSeconds(x),chart[i])))
     return newchart
 
 #20:00-25-30-35-40-45-50-55-60 minutes
@@ -131,20 +144,20 @@ totaltimes=[Time('20:00'),Time('25:00'),Time('30:00'),Time('35:00'),Time('40:00'
             Time('45:00'),Time('50:00'),Time('55:00'),Time('60:00')]
 
 ##for row in fixchart():
-##    print row
+##   (print row)
 ##bilinearinterpolation(Time('24:19'),Time('6:04.75'))
 
 def main():
-    print "Jack Daniels' Tempo Pace Utility"
-    print "Determine your VDOT for extended tempo runs\n"
+    print("Jack Daniels' Tempo Pace Utility")
+    print("Determine your VDOT for extended tempo runs\n")
     while True:
-        x=raw_input("Total run time (mm:ss or hh:mm:ss): ")
-        y=input("Miles: ")
+        x=input("Total run time (mm:ss or hh:mm:ss): ")
+        y=float(input("Miles: "))
         x=Time(x)
         pace=Time(x.getseconds()/y)
-        print "Pace: "+str(pace)
-        print "VDOT: %0.2f" % (bilinearinterpolation(x,pace))
-        wait=raw_input('Do you want to calculate another? (y/n) ')
+        print("Pace: "+str(pace))
+        print("VDOT: %0.2f" % (bilinearinterpolation(x,pace)))
+        wait=input('Do you want to calculate another? (y/n) ')
         if wait.lower()=='y' or wait.lower()=='yes':
             continue
         else:
